@@ -54,6 +54,7 @@ runs:
         response=$(printf '%s' "$raw_response" \
           | sed -r 's/\x1B\[[0-9;?]*[ -/]*[@-~]//g' \
           | perl -CSDA -pe 's/[\x{2800}-\x{28FF}]//g' \
+          | sed -r 's/^[[:space:]]+//g' \
           | tr -d '\r')
         echo "response<<EOF" >> $GITHUB_OUTPUT
         echo "$response" >> $GITHUB_OUTPUT
