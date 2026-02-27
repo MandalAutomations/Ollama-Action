@@ -1,5 +1,5 @@
 # Ollama-Action
-[![Ask Ollama](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml)
+[![Test](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml)
 
 A GitHub composite action that installs [Ollama](https://ollama.com), pulls a model, and runs a prompt — all within your workflow.
 
