@@ -1,0 +1,56 @@
+name: 'Ollama Action'
+description: 'Install Ollama, pull a model, and run a prompt'
+author: 'evanallen13'
+
+inputs:
+  model:
+    description: 'The Ollama model to use (e.g. llama3, mistral, gemma)'
+    required: true
+    default: 'llama3'
+  prompt:
+    description: 'The prompt to send to the model'
+    required: true
+
+outputs:
+  response:
+    description: 'The response from the model'
+    value: ${{ steps.run-prompt.outputs.response }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Ollama
+      shell: bash
+      run: |
+        curl -fsSL https://ollama.com/install.sh | sh
+
+    - name: Start Ollama service
+      shell: bash
+      run: |
+        ollama serve &
+        timeout=30
+        while ! ollama list > /dev/null 2>&1; do
+          if [ $timeout -le 0 ]; then
+            echo "Timed out waiting for Ollama service to start" >&2
+            exit 1
+          fi
+          sleep 1
+          timeout=$((timeout - 1))
+        done
+
+    - name: Pull model
+      shell: bash
+      run: |
+        ollama pull ${{ inputs.model }}
+
+    - name: Run prompt
+      id: run-prompt
+      shell: bash
+      run: |
+        if ! response=$(ollama run ${{ inputs.model }} "${{ inputs.prompt }}" 2>&1); then
+          echo "Error: ollama run failed: $response" >&2
+          exit 1
+        fi
+        echo "response<<EOF" >> $GITHUB_OUTPUT
+        echo "$response" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
