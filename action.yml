@@ -29,7 +29,7 @@ runs:
       if: inputs.cache == 'true'
       uses: actions/cache/restore@v5
       with:
-        key: ${{ github.workflow }}
+        key: ollama-${{ inputs.model }}
         path: |
           ~/.ollama
 
@@ -81,6 +81,6 @@ runs:
     #   if: inputs.cache == 'true'
     #   uses: actions/cache/save@v5
     #   with:
-    #     key: ${{ github.workflow }}
+    #     key: ollama-${{ inputs.model }}
     #     path: |
     #       ~/.ollama
