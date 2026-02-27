@@ -11,7 +11,7 @@ jobs:
         id: ollama
         uses: evanallen13/Ollama-Action@main
         with:
-          model: 'llama3'
+          model: 'tinyllama'
           prompt: 'What is the capital of France?'
 
       - name: Print response

@@ -5,11 +5,15 @@ author: 'evanallen13'
 inputs:
   model:
     description: 'The Ollama model to use (e.g. llama3, mistral, gemma)'
-    required: true
-    default: 'llama3'
+    required: false
+    default: 'tinyllama'
   prompt:
     description: 'The prompt to send to the model'
-    required: true
+    required: false
+  cache: 
+    description: 'Whether to cache the model between runs (true/false)'
+    required: false
+    default: 'false'
 
 outputs:
   response:
@@ -43,8 +47,18 @@ runs:
       run: |
         ollama pull ${{ inputs.model }}
 
+    - name: Restore cached ollama
+      id: cache-ollama
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v5
+      with:
+            key: ${{ github.workflow }}
+            path: |
+              ~/.ollama
+
     - name: Run prompt
       id: run-prompt
+      if: inputs.prompt != ''
       shell: bash
       run: |
         if ! raw_response=$(ollama run ${{ inputs.model }} "${{ inputs.prompt }}" 2>&1); then
@@ -59,3 +73,11 @@ runs:
         echo "response<<EOF" >> $GITHUB_OUTPUT
         echo "$response" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Save ollama to cache
+      if: inputs.cache == 'true'
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ github.workflow }}
+        path: |
+          ~/.ollama
