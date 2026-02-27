@@ -1,0 +1,18 @@
+name: Ask Ollama
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Ollama prompt
+        id: ollama
+        uses: evanallen13/Ollama-Action@main
+        with:
+          model: 'llama3'
+          prompt: 'What is the capital of France?'
+
+      - name: Print response
+        run: echo "${{ steps.ollama.outputs.response }}"
