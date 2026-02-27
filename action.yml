@@ -1,0 +1,73 @@
+name: 'Ollama Action'
+description: 'Install Ollama, pull a model, and run a prompt — all inside a GitHub Actions workflow'
+author: 'MandalAutomations'
+
+branding:
+  icon: 'cpu'
+  color: 'blue'
+
+inputs:
+  model:
+    description: 'Ollama model to pull and use (e.g. llama3, mistral, gemma2)'
+    required: false
+    default: 'llama3'
+  prompt:
+    description: 'Prompt to send to the model'
+    required: false
+    default: ''
+  ollama_version:
+    description: 'Version of Ollama to install (e.g. v0.3.0). Leave empty to install the latest release.'
+    required: false
+    default: ''
+
+outputs:
+  response:
+    description: 'The model response to the prompt (only set when a prompt is provided)'
+    value: ${{ steps.run-prompt.outputs.response }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Ollama
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.ollama_version }}" ]; then
+          curl -fsSL "https://ollama.com/install.sh" | OLLAMA_VERSION="${{ inputs.ollama_version }}" sh
+        else
+          curl -fsSL "https://ollama.com/install.sh" | sh
+        fi
+
+    - name: Start Ollama service
+      shell: bash
+      run: |
+        ollama serve &
+        # Wait until the API is ready
+        for i in $(seq 1 30); do
+          if curl -sf http://localhost:11434 > /dev/null 2>&1; then
+            echo "Ollama is ready."
+            exit 0
+          fi
+          echo "Waiting for Ollama to start... ($i/30)"
+          sleep 2
+        done
+        echo "::error::Ollama did not become ready within 60 seconds."
+        exit 1
+
+    - name: Pull model
+      shell: bash
+      env:
+        OLLAMA_MODEL: ${{ inputs.model }}
+      run: ollama pull "$OLLAMA_MODEL"
+
+    - name: Run prompt
+      id: run-prompt
+      if: inputs.prompt != ''
+      shell: bash
+      env:
+        OLLAMA_PROMPT: ${{ inputs.prompt }}
+        OLLAMA_MODEL: ${{ inputs.model }}
+      run: |
+        RESPONSE=$(ollama run "$OLLAMA_MODEL" "$OLLAMA_PROMPT")
+        echo "response<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$RESPONSE" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
