@@ -23,6 +23,16 @@ outputs:
 runs:
   using: 'composite'
   steps:
+
+    - name: Restore cached ollama
+      id: cache-ollama
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v5
+      with:
+        key: ${{ github.workflow }}
+        path: |
+          ~/.ollama
+
     - name: Install Ollama
       shell: bash
       run: |
@@ -46,15 +56,6 @@ runs:
       shell: bash
       run: |
         ollama pull ${{ inputs.model }}
-
-    - name: Restore cached ollama
-      id: cache-ollama
-      if: inputs.cache == 'true'
-      uses: actions/cache/restore@v5
-      with:
-            key: ${{ github.workflow }}
-            path: |
-              ~/.ollama
 
     - name: Run prompt
       id: run-prompt
