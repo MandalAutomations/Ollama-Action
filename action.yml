@@ -47,10 +47,11 @@ runs:
       id: run-prompt
       shell: bash
       run: |
-        if ! response=$(ollama run ${{ inputs.model }} "${{ inputs.prompt }}" 2>&1); then
-          echo "Error: ollama run failed: $response" >&2
+        if ! raw_response=$(ollama run ${{ inputs.model }} "${{ inputs.prompt }}" 2>&1); then
+          echo "Error: ollama run failed: $raw_response" >&2
           exit 1
         fi
+        response=$(printf '%s' "$raw_response" | sed -r 's/\x1B\[[0-9;?]*[ -/]*[@-~]//g' | tr -d '\r')
         echo "response<<EOF" >> $GITHUB_OUTPUT
         echo "$response" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
