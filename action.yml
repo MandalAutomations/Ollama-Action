@@ -33,10 +33,30 @@ runs:
         path: |
           ~/.ollama
 
-    - name: Install Ollama
+    - name: Restore ollama binary
+      id: cache-ollama-bin
+      uses: actions/cache/restore@v5
+      with:
+        path: ./ollama-bin
+        key: ollama-bin-${{ runner.os }}
+
+    - name: Download ollama if missing
+      if: steps.cache-ollama-bin.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        curl -fsSL https://ollama.com/install.sh | sh
+        mkdir -p ollama-bin
+        curl -L https://ollama.com/download/ollama-linux-amd64 -o ollama-bin/ollama
+        chmod +x ollama-bin/ollama
+
+    - name: Add ollama to PATH
+      shell: bash
+      run: |
+        echo "$PWD/ollama-bin" >> $GITHUB_PATH
+        
+    # - name: Install Ollama
+    #   shell: bash
+    #   run: |
+    #     curl -fsSL https://ollama.com/install.sh | sh
 
     - name: Start Ollama service
       shell: bash
