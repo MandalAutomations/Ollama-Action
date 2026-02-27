@@ -51,7 +51,10 @@ runs:
           echo "Error: ollama run failed: $raw_response" >&2
           exit 1
         fi
-        response=$(printf '%s' "$raw_response" | sed -r 's/\x1B\[[0-9;?]*[ -/]*[@-~]//g' | tr -d '\r')
+        response=$(printf '%s' "$raw_response" \
+          | sed -r 's/\x1B\[[0-9;?]*[ -/]*[@-~]//g' \
+          | perl -CSDA -pe 's/[\x{2800}-\x{28FF}]//g' \
+          | tr -d '\r')
         echo "response<<EOF" >> $GITHUB_OUTPUT
         echo "$response" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
