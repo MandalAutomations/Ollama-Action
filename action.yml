@@ -53,8 +53,10 @@ runs:
         done
 
     - name: Pull model
+      if: inputs.cache != 'true' || steps.cache-ollama.outputs.cache-hit != 'true'
       shell: bash
       run: |
+        echo "Cache miss or caching disabled — pulling model"
         ollama pull ${{ inputs.model }}
 
     - name: Run prompt
