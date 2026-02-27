@@ -13,6 +13,7 @@ jobs:
         with:
           model: 'tinyllama'
           prompt: 'What is the capital of France?'
+          cache: 'true'
 
       - name: Print response
         run: echo "${{ steps.ollama.outputs.response }}"
