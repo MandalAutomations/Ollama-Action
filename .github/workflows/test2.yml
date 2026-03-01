@@ -1,4 +1,4 @@
-name: Ollama Cached 2
+name: Ollama Cached
 
 on:
   workflow_dispatch:
@@ -11,17 +11,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Restore Ollama cache
+      # Restore cache (read-only)
       - name: Restore Ollama cache
         id: ollama-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             /usr/local/bin/ollama
             ~/.ollama
           key: ollama-${{ runner.os }}-v1
 
-      # Install ONLY if cache missed
+      # Install Ollama ONLY if cache missed
       - name: Install Ollama
         if: steps.ollama-cache.outputs.cache-hit != 'true'
         run: |
@@ -43,3 +43,13 @@ jobs:
       - name: Run prompt
         run: |
           ollama run llama3 "Write a haiku about GitHub Actions caching"
+
+      # Save cache at the end (write-only)
+      - name: Save Ollama cache
+        if: steps.ollama-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /usr/local/bin/ollama
+            ~/.ollama
+          key: ollama-${{ runner.os }}-v1
