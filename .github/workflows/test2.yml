@@ -1,0 +1,45 @@
+name: Ollama Cached 2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ollama:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Restore Ollama cache
+      - name: Restore Ollama cache
+        id: ollama-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/bin/ollama
+            ~/.ollama
+          key: ollama-${{ runner.os }}-v1
+
+      # Install ONLY if cache missed
+      - name: Install Ollama
+        if: steps.ollama-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      # Start Ollama
+      - name: Start Ollama
+        run: |
+          ollama serve &
+          sleep 5
+
+      # Pull model ONLY if cache missed
+      - name: Pull model
+        if: steps.ollama-cache.outputs.cache-hit != 'true'
+        run: |
+          ollama pull llama3
+
+      # Example usage
+      - name: Run prompt
+        run: |
+          ollama run llama3 "Write a haiku about GitHub Actions caching"
