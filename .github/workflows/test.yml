@@ -11,7 +11,7 @@ jobs:
         id: ollama
         uses: evanallen13/Ollama-Action@main
         with:
-          model: 'tinyllama'
+          model: 'gemma3'
           prompt: 'What is the capital of France?'
           cache: 'true'
 
