@@ -9,16 +9,17 @@ A GitHub composite action that installs [Ollama](https://ollama.com), pulls a mo
 - name: Run Ollama
   uses: evanallen13/Ollama-Action@main
   with:
-    model: 'llama3'
+    model: 'tinyllama'
     prompt: 'Explain GitHub Actions in one sentence.'
 ```
 
 ## Inputs
 
-| Input    | Description                                      | Required | Default  |
-|----------|--------------------------------------------------|----------|----------|
-| `model`  | The Ollama model to use (e.g. `llama3`, `mistral`, `gemma`) | Yes | `llama3` |
-| `prompt` | The prompt to send to the model                  | Yes      | —        |
+| Input    | Description                                      | Required | Default      |
+|----------|--------------------------------------------------|----------|--------------|
+| `model`  | The Ollama model to use (e.g. `tinyllama`, `llama3`, `mistral`) | No | `tinyllama` |
+| `prompt` | The prompt to send to the model                  | No       | —            |
+| `cache`  | Whether to cache the model between runs (`true`/`false`) | No | `false`  |
 
 ## Outputs
 
@@ -42,7 +43,7 @@ jobs:
         id: ollama
         uses: evanallen13/Ollama-Action@main
         with:
-          model: 'llama3'
+          model: 'tinyllama'
           prompt: 'What is the capital of France?'
 
       - name: Print response
