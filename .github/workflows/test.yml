@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        model: [ 'gemma3', tinyllama', 'gpt-oss']
+        model: [ 'gemma3', 'tinyllama', 'gpt-oss']
     steps:
       - name: Run Ollama prompt
         id: ollama
