@@ -6,12 +6,15 @@ on:
 jobs:
   ask:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        model: [ 'gemma3', tinyllama', 'gpt-oss']
     steps:
       - name: Run Ollama prompt
         id: ollama
         uses: evanallen13/Ollama-Action@main
         with:
-          model: 'gemma3'
+          model: ${{ matrix.model }}
           prompt: 'What is the capital of France?'
           cache: 'true'
 
