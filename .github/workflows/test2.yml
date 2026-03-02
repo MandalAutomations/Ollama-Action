@@ -11,7 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Restore cache (read-only)
       - name: Restore Ollama cache
         id: ollama-cache
         uses: actions/cache/restore@v4
@@ -21,30 +20,32 @@ jobs:
             ~/.ollama
           key: ollama-${{ runner.os }}-v1
 
-      # Install Ollama ONLY if cache missed
+      - name: Check cache hit
+        run: |
+          echo "Cache hit: ${{ steps.ollama-cache.outputs.cache-hit }}"
+
+      - name: check
+        run: ls -la /usr/local/bin || echo "Ollama not found in cache"
+
       - name: Install Ollama
         if: steps.ollama-cache.outputs.cache-hit != 'true'
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
 
-      # Start Ollama
       - name: Start Ollama
         run: |
           ollama serve &
           sleep 5
 
-      # Pull model ONLY if cache missed
       - name: Pull model
         if: steps.ollama-cache.outputs.cache-hit != 'true'
         run: |
           ollama pull llama3
 
-      # Example usage
       - name: Run prompt
         run: |
           ollama run llama3 "Write a haiku about GitHub Actions caching"
 
-      # Save cache at the end (write-only)
       - name: Save Ollama cache
         if: steps.ollama-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
