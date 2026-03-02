@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Run Ollama prompt
         id: ollama
-        uses: evanallen13/Ollama-Action@main
+        uses: MandalAutomations/Ollama-Action@main
         with:
           model: ${{ matrix.model }}
           prompt: 'What is the capital of France?'
