@@ -1,5 +1,5 @@
 # Ollama-Action
-[![Test](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml)
+[![Test](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml)
 
 A GitHub composite action that installs [Ollama](https://ollama.com), pulls a model, and runs a prompt — all within your workflow.
 
@@ -7,7 +7,7 @@ A GitHub composite action that installs [Ollama](https://ollama.com), pulls a mo
 
 ```yaml
 - name: Run Ollama
-  uses: evanallen13/Ollama-Action@main
+  uses: MandalAutomations/Ollama-Action@main
   with:
     model: 'tinyllama'
     prompt: 'Explain GitHub Actions in one sentence.'
@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Run Ollama prompt
         id: ollama
-        uses: evanallen13/Ollama-Action@main
+        uses: MandalAutomations/Ollama-Action@main
         with:
           model: 'tinyllama'
           prompt: 'What is the capital of France?'
