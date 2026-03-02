@@ -24,17 +24,18 @@ runs:
   using: 'composite'
   steps:
 
-    - name: Restore cached ollama
-      id: cache-ollama
-      if: inputs.cache == 'true'
-      uses: actions/cache/restore@v5
+    - name: Restore Ollama cache
+      id: ollama-cache
+      uses: actions/cache/restore@v4
       with:
-        key: ollama-${{ inputs.model }}
         path: |
+          /usr/local/bin/ollama
           ~/.ollama
+        key: ollama-${{ inputs.model }}
 
     - name: Install Ollama
       shell: bash
+      if: steps.ollama-cache.outputs.cache-hit != 'true'
       run: |
         curl -fsSL https://ollama.com/install.sh | sh
 
@@ -77,10 +78,11 @@ runs:
         echo "$response" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
-    - name: Save ollama to cache
-      if: inputs.cache != 'true' || steps.cache-ollama.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v5
+    - name: Save Ollama cache
+      if: steps.ollama-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
       with:
-        key: ollama-${{ inputs.model }}
         path: |
+          /usr/local/bin/ollama
           ~/.ollama
+        key: ollama-${{ runner.os }}-v1

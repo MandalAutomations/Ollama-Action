@@ -20,13 +20,6 @@ jobs:
             ~/.ollama
           key: ollama-${{ runner.os }}-v1
 
-      - name: Check cache hit
-        run: |
-          echo "Cache hit: ${{ steps.ollama-cache.outputs.cache-hit }}"
-
-      - name: check
-        run: ls -la /usr/local/bin || echo "Ollama not found in cache"
-
       - name: Install Ollama
         if: steps.ollama-cache.outputs.cache-hit != 'true'
         run: |
