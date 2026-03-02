@@ -85,4 +85,4 @@ runs:
         path: |
           /usr/local/bin/ollama
           ~/.ollama
-        key: ollama-${{ runner.os }}-v1
+        key: ollama-${{ inputs.model }}
