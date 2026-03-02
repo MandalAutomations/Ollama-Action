@@ -1,6 +1,8 @@
 # Ollama-Action
 [![Test](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/evanallen13/Ollama-Action/actions/workflows/test.yml)[![Release](https://img.shields.io/github/v/release/evanallen13/Ollama-Action?sort=date)](https://github.com/evanallen13/Ollama-Action/releases/latest)
 
+[![Latest Release](https://github.com/evanallen13/Ollama-Action/releases/latest/download/release.svg)](https://github.com/evanallen13/Ollama-Action/releases/latest)
+
 A GitHub composite action that installs [Ollama](https://ollama.com), pulls a model, and runs a prompt — all within your workflow.
 
 ## Usage
