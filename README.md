@@ -1,5 +1,5 @@
 # Ollama-Action
-[![Test](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml)
+[![Test](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml/badge.svg)](https://github.com/MandalAutomations/Ollama-Action/actions/workflows/test.yml)[![Release date](https://img.shields.io/github/release-date/phplicengine/bitly)](https://packagist.org/packages/phplicengine/bitly)
 
 A GitHub composite action that installs [Ollama](https://ollama.com), pulls a model, and runs a prompt — all within your workflow.
 
